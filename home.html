@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>myProject</title>
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="./node_modules/axios/dist/axios.min.js"></script>
+
+    <style>
+        #add-btn {
+            position: fixed;
+            bottom: 5%;
+            right: 7%;
+            display: flex;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            box-shadow: 0px 10px 10px rgba(92, 64, 184, 0.87);
+            line-height: 31px;
+        }
+
+        /*=========LOADER STYLES==== */
+        .lds-roller {
+            display: inline-block;
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+
+        .lds-roller div {
+            animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+            transform-origin: 40px 40px;
+        }
+
+        .lds-roller div:after {
+            content: " ";
+            display: block;
+            position: absolute;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #f3eeee;
+            margin: -4px 0 0 -4px;
+        }
+
+        .lds-roller div:nth-child(1) {
+            animation-delay: -0.036s;
+        }
+
+        .lds-roller div:nth-child(1):after {
+            top: 63px;
+            left: 63px;
+        }
+
+        .lds-roller div:nth-child(2) {
+            animation-delay: -0.072s;
+        }
+
+        .lds-roller div:nth-child(2):after {
+            top: 68px;
+            left: 56px;
+        }
+
+        .lds-roller div:nth-child(3) {
+            animation-delay: -0.108s;
+        }
+
+        .lds-roller div:nth-child(3):after {
+            top: 71px;
+            left: 48px;
+        }
+
+        .lds-roller div:nth-child(4) {
+            animation-delay: -0.144s;
+        }
+
+        .lds-roller div:nth-child(4):after {
+            top: 72px;
+            left: 40px;
+        }
+
+        .lds-roller div:nth-child(5) {
+            animation-delay: -0.18s;
+        }
+
+        .lds-roller div:nth-child(5):after {
+            top: 71px;
+            left: 32px;
+        }
+
+        .lds-roller div:nth-child(6) {
+            animation-delay: -0.216s;
+        }
+
+        .lds-roller div:nth-child(6):after {
+            top: 68px;
+            left: 24px;
+        }
+
+        .lds-roller div:nth-child(7) {
+            animation-delay: -0.252s;
+        }
+
+        .lds-roller div:nth-child(7):after {
+            top: 63px;
+            left: 17px;
+        }
+
+        .lds-roller div:nth-child(8) {
+            animation-delay: -0.288s;
+        }
+
+        .lds-roller div:nth-child(8):after {
+            top: 56px;
+            left: 12px;
+        }
+
+        @keyframes lds-roller {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+
+</head>
+
+
+<body style="background-color: rgba(90, 8, 110, 0.73);">
+
+    <!-- loader -->
+<div id="loader" style="background-color: rgba(128, 128, 128, 0.395);border-radius: 20px; position: fixed ;top: 0px; bottom: 0px; left: 0px; right: 0px; margin: auto auto ; display: flex;justify-content: center;align-items: center; z-index: 9999; width: 100px;height: 100px;">
+    <div class="lds-roller">
+        <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+    </div>
+</div>
+    <!-- modals -->
+    <!-- Login modal -->
+    <div class="modal fade" id="login-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Login</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">Username:</label>
+                            <input value="youssefAr" type="text" class="form-control" id="username-input">
+                        </div>
+                        <div class="mb-3">
+                            <label for="message-text" class="col-form-label">Password:</label>
+                            <input value="123456" type="password" class="form-control" id="password-input">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="loginBtnClicked()">Login</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal regester -->
+    <div class="modal fade" id="regester-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Regester A New User</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">Profile Image:</label>
+                            <input type="file" class="form-control" id="regester-image-input">
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">name:</label>
+                            <input type="text" class="form-control" id="regester-name-input">
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">Username:</label>
+                            <input type="text" class="form-control" id="regester-username-input">
+                        </div>
+                        <div class="mb-3">
+                            <label for="message-text" class="col-form-label">Password:</label>
+                            <input type="password" class="form-control" id="regester-password-input">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="RegesterBtnClicked()">Regester</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CreatePost modal -->
+    <div class="modal fade" id="create-post-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="post-modal-title">Create A New Post </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">Title</label>
+                            <input type="text" class="form-control" id="post-title-input">
+                            <input type="hidden" id="post-id-input">
+                        </div>
+                        <div class="mb-3">
+                            <textarea name="" id="post-body-input"
+                                style="width: 100%;height: 100px; resize: none;"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">image</label>
+                            <input type="file" class="form-control" id="post-image-input">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button id="post-modal-submit-btn" type="button" class="btn btn-primary"
+                        onclick="CreateANewPostClicked()">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- delete Post modal -->
+    <div class="modal fade" id="delete-post-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="post-modal-title">are you sure you want delete the post <span
+                            id="delete-post-title"></span> </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <input type="text" id="delete-post-id-input" value="">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button id="post-modal-submit-btn" type="button" class="btn btn-danger"
+                        onclick="confirmPostDelete()">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ADD POST BUTTON -->
+    <div class="bg-primary" id="add-btn" onclick="addBtnClicked()">
+        +
+    </div>
+    <!-- ALERTS -->
+    <div id="success-alert" class="show fade" style="position: fixed; z-index: 999999;width: 30%;bottom: 0;right: 0;">
+    </div>
+
+    <!-- Nav Bar -->
+    <div class="container pt-2 mb-5 ">
+        <div class="d-flex justify-content-center">
+            <div class="col-9">
+                <nav class="navbar navbar-expand-lg bg-light shadow  ">
+                    <div class="container-fluid">
+                        <a class="navbar-brand" href="home.html">J00</a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                            <div class="navbar-nav" style="cursor:pointer;">
+                                <a class="nav-link active" aria-current="page" href="home.html">Home</a>
+                                <a class="nav-link" onclick="profileClicked()">Profile</a>
+                            </div>
+                            <!-- none logged user -->
+                            <div class="d-flex justify-content-end  w-100 " id="loggedin-div">
+                                <button id="login-btn" type="button" data-bs-toggle="modal"
+                                    data-bs-target="#login-modal" class=" btn btn-outline-success mx-2">Login</button>
+                                <button id="register-btn" type="button" data-bs-toggle="modal"
+                                    data-bs-target="#regester-modal" class="btn btn-outline-success">Register</button>
+                            </div>
+                            <!-- logged user -->
+                            <div class="d-flex justify-content-end  w-100  align-items-center " id="logout-div">
+                                <img id="nav-user-image" class=""
+                                    style="width: 35px;height: 35px; border-radius: 50%; margin-right: 4px;"
+                                    src="./profile-pics/Me.JPG" alt="">
+                                <b id="nav-username" style="margin-right: 8px;">@Joo</b>
+                                <button onclick="logout()" id="logout-btn" type="button"
+                                    class="btn btn-outline-success">Logout</button>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Countent -->
+    <div class="container pt-2 mb-5 ">
+        <div class="d-flex justify-content-center">
+            <div class="col-9">
+                <!-- posts -->
+                <div id="posts">
+                    <!--post-->
+                    <div class="card shadow my-3">
+                        <div class="card-header">
+                            <img style="width: 40px;height: 40px; border-radius: 50%;" class="border border-2"
+                                src="./profile-pics/Me.JPG">
+                            <b>@joo</b>
+                        </div>
+                        <div class="card-body">
+                            <img style="width: 100%; height: 200px;" src="./placehorder/Screenshot (122).png">
+                            <h6 style="color: rgba(25, 23, 23, 0.603); margin-top: 3px;">
+                                2minute ago
+                            </h6>
+                            <h5>
+                                youssef
+                            </h5>
+                            <p>
+                                Lorem ipsum dolor sit,
+                                amet consectetur adipisicing
+                                elit. Atque iste, modi, labore
+                            </p>
+                            <hr>
+                            <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-pencil" viewBox="0 0 16 16">
+                                    <path
+                                        d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325" />
+                                </svg>
+                                <span>
+                                    (3)comment
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+<script src="./mainLogic.js"></script>
+<script src="./homeScript.js"></script>
+
+</html>
